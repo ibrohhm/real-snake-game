@@ -5,7 +5,7 @@ function Food(){
 }
 
 Food.prototype.draw = function(snake, context){
-  grid = new Grid(this.x, this.y, snake.belly, snake.gap, this.color)
+  grid = new Grid(this.x, this.y, snake.belly, snake.gap, snake.isAlife ? this.color : "grey")
   grid.draw(context)
 }
 

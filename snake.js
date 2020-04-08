@@ -9,15 +9,18 @@ function Snake(){
   this.vx = [this.total, 0, -this.total, 0]
   this.vy = [0, this.total, 0, -this.total]
   this.prevTail = new Grid()
+  this.isAlife = true
 }
 
 Snake.prototype.build = function(x, y){
+  this.grids = []
   this.length = 3
   for(var i=0; i<this.length; i++){
     this.grids.push(new Grid(x+i*this.total, y, this.belly, this.gap, this.color))
   }
   this.grids.reverse()
   this.setHead(this.grids[0])
+  this.isAlife = true
 }
 
 Snake.prototype.draw = function(ctx){
@@ -32,6 +35,13 @@ Snake.prototype.eat = function(){
 }
 
 Snake.prototype.move = function(canvas){
+  if(!this.checkAlife()){
+    for(var i=0; i<this.grids.length; i++){
+      this.grids[i].color = "grey"
+    }
+    return
+  }
+
   this.setPrevTail(this.grids[this.length-1])
   for(var i=this.length-1; i>0; i--){
     this.grids[i] = this.grids[i-1]
@@ -91,6 +101,19 @@ Snake.prototype.setPrevTail = function(grid){
   this.prevTail = grid
 }
 
-Snake.prototype.isAlife = function(){
+Snake.prototype.checkAlife = function(){
+  if(!this.isAlife) return this.isAlife
 
+  curHead = this.getHead()
+  nextX = curHead.x+this.vx[this.direction]
+  nextY = curHead.y+this.vy[this.direction]
+
+  for(var i=0; i<snake.grids.length-1;i++){//without tail
+    if(snake.grids[i].x == nextX && snake.grids[i].y == nextY){
+      this.isAlife = false
+      break;
+    }
+  }
+
+  return this.isAlife
 }
