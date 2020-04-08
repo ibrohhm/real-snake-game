@@ -1,10 +1,12 @@
 var canvas = document.getElementById('canvas')
 var context = canvas.getContext('2d')
 var snake = new Snake()
+var food = new Food()
 
 function init(){
     snake.build(60,60)
     snake.draw(context)
+    food.build(canvas, snake, context)
 }
 
 function resize() {
@@ -13,10 +15,23 @@ function resize() {
     init()
 }
 
-function move(){
+function checkEating(){
+    head = snake.getHead()
+    return head.x == food.x && head.y == food.y ? true : false
+}
+
+function snakeMove(isMove){
+    if(!isMove) return
+
     snake.move(canvas)
+    isEating = checkEating()
+    if(isEating){
+        snake.eat()
+    }
+
     context.clearRect(0, 0, canvas.width, canvas.height);
     snake.draw(context)
+    isEating ? food.build(canvas, snake, context):food.draw(snake, context)
 }
 
 window.onresize = resize
@@ -25,20 +40,23 @@ resize()
 document.addEventListener('keydown', function (e) {
     switch(e.keyCode){
         case 32:
-            move()
-            console.log(snake.grids[0].x, snake.grids[0].y, canvas.width, canvas.height)
+            snakeMove(true)
             break;
         case 39:
-            snake.changeDirection("right")
+        case 68:
+            snakeMove(snake.changeDirection("right"))
             break;
         case 40:
-            snake.changeDirection("down")
+        case 83:
+            snakeMove(snake.changeDirection("down"))
             break;
         case 37:
-            snake.changeDirection("left")
+        case 65:
+            snakeMove(snake.changeDirection("left"))
             break;
         case 38:
-            snake.changeDirection("up")
+        case 87:
+            snakeMove(snake.changeDirection("up"))
             break;
     }
 })
