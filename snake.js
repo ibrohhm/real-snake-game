@@ -2,21 +2,25 @@ function Snake(){
   this.length = 0
   this.grids = []
   this.direction = 0 // right 0, down 1, left 2, up 3
+  this.nextDirection = 0
   this.belly = 18
   this.gap = 1
   this.total = 20
-  this.color = "green"
+  this.axis = 3*this.total
+  this.ordinat = 3*this.total
+  this.color = "#008000"
+  this.headColor = "#009900"
   this.vx = [this.total, 0, -this.total, 0]
   this.vy = [0, this.total, 0, -this.total]
   this.prevTail = new Grid()
   this.isAlife = true
 }
 
-Snake.prototype.build = function(x, y){
+Snake.prototype.build = function(){
   this.grids = []
   this.length = 3
   for(var i=0; i<this.length; i++){
-    this.grids.push(new Grid(x+i*this.total, y, this.belly, this.gap, this.color))
+    this.grids.push(new Grid(this.axis+i*this.total, this.ordinat, this.belly, this.gap))
   }
   this.grids.reverse()
   this.setHead(this.grids[0])
@@ -25,7 +29,7 @@ Snake.prototype.build = function(x, y){
 
 Snake.prototype.draw = function(ctx){
   for(var i=0; i<this.length; i++){
-    this.grids[i].draw(ctx)
+    this.grids[i].draw(ctx, i==0 ? this.headColor : this.color)
   }
 }
 
@@ -35,10 +39,10 @@ Snake.prototype.eat = function(){
 }
 
 Snake.prototype.move = function(canvas){
+  this.setDirection()
   if(!this.checkAlife()){
-    for(var i=0; i<this.grids.length; i++){
-      this.grids[i].color = "grey"
-    }
+    this.color = "#808080"
+    this.headColor = "#a5a5a5"
     return
   }
 
@@ -47,18 +51,18 @@ Snake.prototype.move = function(canvas){
     this.grids[i] = this.grids[i-1]
   }
   curHead = this.getHead()
-  newHead = this.setHead(new Grid(curHead.x+this.vx[this.direction], curHead.y+this.vy[this.direction], this.belly, this.gap, this.color))
+  newHead = this.setHead(new Grid(curHead.x+this.vx[this.direction], curHead.y+this.vy[this.direction], this.belly, this.gap))
 
   if(newHead.y > canvas.height){
-    this.setHead(new Grid(newHead.x+this.vx[this.direction], 0, this.belly, this.gap, this.color))
+    this.setHead(new Grid(newHead.x+this.vx[this.direction], 0, this.belly, this.gap))
   } else if(newHead.y < 0){
     _res = canvas.height%this.total
-    this.setHead(new Grid(newHead.x+this.vx[this.direction], canvas.height - _res, this.belly, this.gap, this.color))
+    this.setHead(new Grid(newHead.x+this.vx[this.direction], canvas.height - _res, this.belly, this.gap))
   } else if(newHead.x > canvas.width){
-    this.setHead(new Grid(0, newHead.y+this.vy[this.direction], this.belly, this.gap, this.color))
+    this.setHead(new Grid(0, newHead.y+this.vy[this.direction], this.belly, this.gap))
   } else if (newHead.x < 0) {
     _res = canvas.width%this.total
-    this.setHead(new Grid(canvas.width - _res, newHead.y+this.vy[this.direction], this.belly, this.gap, this.color))
+    this.setHead(new Grid(canvas.width - _res, newHead.y+this.vy[this.direction], this.belly, this.gap))
   }
 }
 
@@ -66,21 +70,21 @@ Snake.prototype.move = function(canvas){
 Snake.prototype.changeDirection = function(dir){
   switch(dir){
     case "down":
-      _change = this.direction != 3
-      this.direction = _change ? 1 : this.direction
-      return _change
+      _isSameDirection = this.direction == 1
+      this.nextDirection = this.direction != 3 ? 1 : this.direction
+      return _isSameDirection
     case "left":
-      _change = this.direction != 0
-      this.direction = _change ? 2 : this.direction
-      return _change
+      _isSameDirection = this.direction == 2
+      this.nextDirection = this.direction != 0 ? 2 : this.direction
+      return _isSameDirection
     case "up":
-      _change = this.direction != 1
-      this.direction = _change ? 3 : this.direction
-      return _change
+      _isSameDirection = this.direction == 3
+      this.nextDirection = this.direction != 1 ? 3 : this.direction
+      return _isSameDirection
     default:
-      _change = this.direction != 2
-      this.direction = _change ? 0 : this.direction
-      return _change
+      _isSameDirection = this.direction == 0
+      this.nextDirection = this.direction != 2 ? 0 : this.direction
+      return _isSameDirection
   }
 }
 
@@ -99,6 +103,10 @@ Snake.prototype.getPrevTail = function(){
 
 Snake.prototype.setPrevTail = function(grid){
   this.prevTail = grid
+}
+
+Snake.prototype.setDirection = function(){
+  this.direction = this.nextDirection
 }
 
 Snake.prototype.checkAlife = function(){

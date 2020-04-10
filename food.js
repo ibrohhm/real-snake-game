@@ -1,12 +1,12 @@
 function Food(){
   this.x = 0
   this.y = 0
-  this.color = "red"
+  this.color = "#cc3300"
 }
 
 Food.prototype.draw = function(snake, context){
-  grid = new Grid(this.x, this.y, snake.belly, snake.gap, snake.isAlife ? this.color : "grey")
-  grid.draw(context)
+  grid = new Grid(this.x, this.y, snake.belly, snake.gap)
+  grid.draw(context, snake.isAlife ? this.color : "#a5a5a5")
 }
 
 Food.prototype.build = function(canvas, snake, context){

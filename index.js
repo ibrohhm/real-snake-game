@@ -2,9 +2,10 @@ var canvas = document.getElementById('canvas')
 var context = canvas.getContext('2d')
 var snake = new Snake()
 var food = new Food()
+var isPlay = false
 
 function init(){
-    snake.build(60,60)
+    snake.build()
     snake.draw(context)
     food.build(canvas, snake, context)
 }
@@ -37,26 +38,32 @@ function snakeMove(isMove){
 window.onresize = resize
 resize()
 
+setInterval(function(){
+    if(isPlay && snake.isAlife){
+        snakeMove(true)
+    }
+}, 200);
+
 document.addEventListener('keydown', function (e) {
     switch(e.keyCode){
         case 32:
-            snakeMove(true)
+            isPlay = !isPlay
             break;
         case 39:
         case 68:
-            snakeMove(snake.changeDirection("right"))
+            if(isPlay) snakeMove(snake.changeDirection("right"))
             break;
         case 40:
         case 83:
-            snakeMove(snake.changeDirection("down"))
+            if(isPlay) snakeMove(snake.changeDirection("down"))
             break;
         case 37:
         case 65:
-            snakeMove(snake.changeDirection("left"))
+            if(isPlay) snakeMove(snake.changeDirection("left"))
             break;
         case 38:
         case 87:
-            snakeMove(snake.changeDirection("up"))
+            if(isPlay) snakeMove(snake.changeDirection("up"))
             break;
     }
 })
