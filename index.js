@@ -72,15 +72,34 @@ document.addEventListener('keydown', function (e) {
     }
 })
 
+document.addEventListener("click", function(e){
+    if(!isPlay) return
+
+    var curHead = snake.getHead()
+    switch(snake.direction){
+        case 0://right
+        case 2://left
+            snake.changeDirection(curHead.y < e.clientY ? "down" : "up")
+            break;
+        case 1: //down
+        case 3: //up
+            snake.changeDirection(curHead.x < e.clientX ? "right" : "left")
+            break;
+    }
+})
+
 $play.addEventListener("click", function(e){
+    e.stopPropagation();
     gamePlay()
 })
 
 $pause.addEventListener("click", function(e){
+    e.stopPropagation();
     gamePause()
 })
 
 $restart.addEventListener("click", function(e){
+    e.stopPropagation();
     init()
 })
 
