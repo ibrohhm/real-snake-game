@@ -1,3 +1,11 @@
+* {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+
 body {
   width: 100%;
   height: 100vh;
@@ -6,4 +14,53 @@ body {
 
 #canvas{
   background: #1d1e22;
+}
+
+#instruction {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #058075;
+}
+
+#instruction .button {
+  border: 1px solid #058075;
+  padding: 2px 4px;
+  margin: 10px 2px;
+  cursor: pointer;
+  width: 100px;
+  text-align: center;
+}
+
+#instruction .button.hide {
+  display: none;
+}
+
+#instruction .button:hover {
+  background-color: #05807554;
+}
+
+#instruction .button:active {
+  background-color: #058075;
+  border: 1px solid #058075;
+  color: white;
+}
+
+#score{
+  width: 100vw;
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #a7a7a7;
+  bottom: 0px;
+}
+
+#score .col {
+  padding: 2px 4px;
+  margin: 10px 2px;
+  width: 120px;
+  text-align: left;
 }

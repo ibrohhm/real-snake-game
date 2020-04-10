@@ -20,7 +20,7 @@ Snake.prototype.build = function(){
   this.grids = []
   this.length = 3
   for(var i=0; i<this.length; i++){
-    this.grids.push(new Grid(this.axis+i*this.total, this.ordinat, this.belly, this.gap))
+    this.grids.push(new Grid(this.axis+i*this.total, this.ordinat))
   }
   this.grids.reverse()
   this.setHead(this.grids[0])
@@ -51,18 +51,18 @@ Snake.prototype.move = function(canvas){
     this.grids[i] = this.grids[i-1]
   }
   curHead = this.getHead()
-  newHead = this.setHead(new Grid(curHead.x+this.vx[this.direction], curHead.y+this.vy[this.direction], this.belly, this.gap))
+  newHead = this.setHead(new Grid(curHead.x+this.vx[this.direction], curHead.y+this.vy[this.direction]))
 
   if(newHead.y > canvas.height){
-    this.setHead(new Grid(newHead.x+this.vx[this.direction], 0, this.belly, this.gap))
+    this.setHead(new Grid(newHead.x+this.vx[this.direction], 0))
   } else if(newHead.y < 0){
     _res = canvas.height%this.total
-    this.setHead(new Grid(newHead.x+this.vx[this.direction], canvas.height - _res, this.belly, this.gap))
+    this.setHead(new Grid(newHead.x+this.vx[this.direction], canvas.height - _res))
   } else if(newHead.x > canvas.width){
-    this.setHead(new Grid(0, newHead.y+this.vy[this.direction], this.belly, this.gap))
+    this.setHead(new Grid(0, newHead.y+this.vy[this.direction]))
   } else if (newHead.x < 0) {
     _res = canvas.width%this.total
-    this.setHead(new Grid(canvas.width - _res, newHead.y+this.vy[this.direction], this.belly, this.gap))
+    this.setHead(new Grid(canvas.width - _res, newHead.y+this.vy[this.direction]))
   }
 }
 

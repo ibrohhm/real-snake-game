@@ -1,8 +1,8 @@
-function Grid(x, y, size, padding){
+function Grid(x, y){
   this.x = x
   this.y = y
-  this.size = size
-  this.padding = padding
+  this.size = 18
+  this.padding = 1
 }
 
 Grid.prototype.draw =function(ctx, color){

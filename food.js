@@ -4,27 +4,28 @@ function Food(){
   this.color = "#cc3300"
 }
 
-Food.prototype.draw = function(snake, context){
-  grid = new Grid(this.x, this.y, snake.belly, snake.gap)
-  grid.draw(context, snake.isAlife ? this.color : "#a5a5a5")
+Food.prototype.draw = function(context, isAlife){
+  grid = new Grid(this.x, this.y)
+  grid.draw(context, isAlife ? this.color : "#a5a5a5")
 }
 
 Food.prototype.build = function(canvas, snake, context){
-  _axis = Math.floor(canvas.width/snake.total)
-  _ordinat = Math.floor(canvas.height/snake.total)
-  this.x = Math.floor(Math.random() * _axis)*snake.total
-  this.y = Math.floor(Math.random() * _ordinat)*snake.total;
-  
-  _insideSnake = false
+  var _maxX = Math.ceil(canvas.width/snake.total)
+  var _maxY = Math.ceil(canvas.height/snake.total)
+  var _maxIndex = _maxX*_maxY
+  var arrIndex = [...Array(_maxIndex).keys()]
+  var arrSnake = []
+
   for(var i=0; i<snake.grids.length;i++){
-    if(snake.grids[i].x == this.x && snake.grids[i].y == this.y){
-      _insideSnake = true
-      break;
-    }
+    var _axis = snake.grids[i].x/snake.total
+    var _ordinat = snake.grids[i].y/snake.total
+    arrSnake.push(_axis + _ordinat*_maxX)
   }
-  if(!_insideSnake){
-    return this.draw(snake, context)
-  }
-  return this.build(canvas, snake, context)
+
+  var arrEmpty = arrIndex.filter(x => !arrSnake.includes(x));
+  var randIndex = arrEmpty[Math.floor(Math.random() * arrEmpty.length)]
+
+  this.x = (randIndex%_maxX)*snake.total
+  this.y = Math.floor(randIndex/_maxX)*snake.total
 }
 
